@@ -5,6 +5,7 @@ import uuid
 import time
 import json
 import logging
+import requests
 logger = logging.getLogger()
 
 
@@ -21,6 +22,9 @@ class Trading(bt.Strategy):
     RTH = [9, 10, 11, 12, 13, 14, 15, 16, 17]
 
     LIVE = False
+    SIGNAL_WEBHOOK_URL = None  # Discord信号通知
+    TRADE_WEBHOOK_URL = None  # Discord交易通知
+
     TICK = 0.25
 
     def __init__(self):
@@ -161,6 +165,7 @@ class Trading(bt.Strategy):
                 stop_price = current_close-self.timeframe_sl
                 target_price = current_close+self.timeframe_tp
                 if self.LIVE:
+                    self.trade_alert('Long', current_close)
                     trade = self.db_add_trades(lmt=current_close, action="BUY", quantity=1, target=target_price, stop=stop_price, strategy=self.name)
                     trade_id = trade.id
                 main_order = self.buy(price=current_close, exectype=exectype, tradeid=trade_id)
@@ -173,6 +178,7 @@ class Trading(bt.Strategy):
                 stop_price = current_close+self.timeframe_sl
                 target_price = current_close-self.timeframe_tp
                 if self.LIVE:
+                    self.trade_alert('Short', current_close)
                     trade = self.db_add_trades(lmt=current_close, action="SELL", quantity=1, target=target_price, stop=stop_price, strategy=self.name)
                     trade_id = trade.id
                 main_order = self.sell(price=current_close, exectype=exectype, tradeid=trade_id)
@@ -198,6 +204,20 @@ class Trading(bt.Strategy):
         if self.position_size > 0:
             pnl = self.data.close[0] - position_price
         return pnl
+
+    def signal_alert(self, _signal, _price, _time, _strategy_name):
+        if _signal < 0:
+            message = f"看跌信号, price={_price},  Time={_time}  {_strategy_name}"
+        elif _signal > 0:
+            message = f"看涨信号, Price={_price},  Time={_time}  {_strategy_name}"
+
+        requests.post(self.SIGNAL_WEBHOOK_URL, data={'content': message})
+
+    def trade_alert(self, action, price, pnl=None):
+        message = f"{self.name}-{action}@{price}"
+        if pnl:
+            message += f"  pnl: ${pnl}"
+        requests.post(self.TRADE_WEBHOOK_URL, data={'content': message})
 
     @property
     def timeframe_sl(self):
@@ -257,7 +277,7 @@ class Report:
         for order in orders:
             if order.status in [order.Completed]:
                 all_trades_map[order.tradeid].append(order)
-        return all_trades_map.values()
+        return [i for i in all_trades_map.values() if len(i) == 2]
 
     @staticmethod
     def get_performance(df, grouped_order, pnl_map):

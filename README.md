@@ -29,3 +29,19 @@ python backtest.py
 ![Alt text](./img/img.png)
 ![Alt text](./img/img_1.png)
 
+
+
+# 实时交易
+
+#### 注册Discord Alert Webhook
+
+```
+cerebro.addalert(
+  signal_webhook='Your Discord Webhook URL',  # 信号通知
+  trading_webhook='Your Discord Webhook URL'  # 交易通知
+)
+```
+
+![Alt text](./img/img_2.png)
+![Alt text](./img/img_3.png)
+

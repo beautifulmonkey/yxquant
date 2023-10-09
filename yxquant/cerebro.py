@@ -1,3 +1,5 @@
+import time
+
 import backtrader as bt
 from yxquant.yxquant.trading import Trading, Report
 from yxquant.yxquant.analyzer import PnlAnalysis
@@ -47,9 +49,16 @@ class Cerebro(bt.Cerebro):
         with socketserver.TCPServer(("", port), http.server.SimpleHTTPRequestHandler) as httpd:
             url = f"Web: http://localhost:{port}"
             print(url)
+            time.sleep(2)
             webbrowser.open(url)
             httpd.serve_forever()
 
     def adddata(self, df):
         self.df = df
         super().adddata(bt.feeds.PandasData(dataname=self.df))
+
+    def addalert(self, signal_webhook=None, trading_webhook=None):
+        # Discord alert
+        Trading.LIVE = True
+        Trading.SIGNAL_WEBHOOK_URL = signal_webhook
+        Trading.TRADE_WEBHOOK_URL = trading_webhook
