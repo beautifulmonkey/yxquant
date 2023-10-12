@@ -344,7 +344,7 @@ class Report:
         return performance
 
     @staticmethod
-    def export_result_to_json(cerebro):
+    def create_report(cerebro):
 
         grouped_order = list(Report.order_group(cerebro.broker.orders))
         grouped_order.sort(key=lambda x: x[0].executed.dt)

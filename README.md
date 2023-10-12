@@ -23,11 +23,26 @@ python backtest.py
 ```
 
 
-#### 运行完毕后访问: http://localhost:2918
-
-#### 将会看到交易记录, 以及结果分析
+#### 运行完毕后访问: [http://localhost:2918](http://localhost:2918)
 ![Alt text](./img/img.png)
 ![Alt text](./img/img_1.png)
+
+# 参数优化
+
+```
+#注册策略,参数以及优化范围, 可以是range也可以是list
+cerebro.optparams(EMA9Strategy, dict(
+    your_param=range(5, 10)
+))
+```
+
+```
+cd examples
+python backtest.py
+```
+#### 运行完毕后访问: [http://localhost:2918?optimizing=1](http://localhost:2918?optimizing=1)
+
+![Alt text](./img/img_4.png)
 
 
 
