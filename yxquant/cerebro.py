@@ -35,7 +35,7 @@ class Cerebro(bt.Cerebro):
             analysis = {"lines": curve, "table": performance}
             with open(f"{dist_dir}/optimizing_report.json", "w") as outfile:
                 json.dump(analysis, outfile)
-            url = f"Web: http://localhost:{port}?optimizing=1"
+            url = f"http://localhost:{port}?optimizing=1"
 
         else:
             data_json = Report.create_report(self)
@@ -49,12 +49,12 @@ class Cerebro(bt.Cerebro):
                 json.dump(data_json, outfile)
             with open(f"{dist_dir}/indicator_data.json", "w") as outfile:
                 json.dump({}, outfile)
-            url = f"Web: http://localhost:{port}"
+            url = f"http://localhost:{port}"
 
         os.chdir(dist_dir)
 
         with socketserver.TCPServer(("", port), http.server.SimpleHTTPRequestHandler) as httpd:
-            print(url)
+            print('Web', url)
             time.sleep(2)
             webbrowser.open(url)
             httpd.serve_forever()
