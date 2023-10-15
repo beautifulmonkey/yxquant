@@ -1,8 +1,8 @@
 import pandas as pd
 import backtrader as bt
 
-from yxquant.yxquant.trading import Trading
-from yxquant.yxquant.cerebro import Cerebro
+from yxquant.trading import Trading
+from yxquant.cerebro import Cerebro
 
 
 class EMA9Strategy(Trading):

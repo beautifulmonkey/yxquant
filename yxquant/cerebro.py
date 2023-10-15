@@ -1,8 +1,8 @@
 import time
 
 import backtrader as bt
-from yxquant.yxquant.trading import Trading, Report
-from yxquant.yxquant.analyzer import PnlAnalysis, ParamsOpt
+from yxquant.trading import Trading, Report
+from yxquant.analyzer import PnlAnalysis, ParamsOpt
 import http.server
 import socketserver
 import webbrowser
