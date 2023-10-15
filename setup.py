@@ -6,7 +6,7 @@ setup(
     description="yxquant",
     packages=find_packages(),
     package_data={
-        'yxquant': ['dist/*'],
+        'yxquant': ['dist/*', 'dist/assets/*'],
     },
     install_requires=[
         "pandas",
