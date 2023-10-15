@@ -5,6 +5,9 @@ setup(
     version="0.1",
     description="yxquant",
     packages=find_packages(),
+    package_data={
+        'yxquant': ['dist/*'],
+    },
     install_requires=[
         "pandas",
         "numpy",
