@@ -4,6 +4,8 @@ import backtrader as bt
 from pathlib import Path
 from typing import Dict, Any, Type, Union, Callable, Optional, List
 
+# TODO: 适配tqdm
+
 class RunContext:
     """记录一次运行的输出路径、统计、对象引用等"""
     def __init__(self, out_dir: Path):
@@ -27,11 +29,8 @@ class CoreEngine:
         self.cerebro.adddata(feed)
         return feed
 
-    def add_analyzers(self):
-        for acfg in self.config.get("analyzers", []):
-            cls = load_object(acfg["cls"]) if isinstance(acfg["cls"], str) else acfg["cls"]
-            a = self.cerebro.addanalyzer(cls, **acfg.get("params", {}))
-            self.ctx.objects.setdefault("analyzers", []).append(a)
+    def add_analyzer(self, analyzer, name: str=None):
+        self.cerebro.addanalyzer(analyzer, _name=name)
 
     # def configure_broker(self):
     #     broker = self.cerebro.getbroker()

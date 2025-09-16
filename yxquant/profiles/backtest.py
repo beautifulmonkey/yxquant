@@ -3,6 +3,7 @@ from typing import Dict, Any
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Sequence, Union, Type
 from .common import DataFeed, Broker
+from yxquant.analyzer import PnlAnalyzer
 # 可继续扩展 ParquetFeed / DBFeed 等
 
 
@@ -26,4 +27,4 @@ class BacktestProfile:
                 engine.cerebro.broker.set_slippage_perc(perc=self.broker.slip_perc)
 
         # 分析器
-        # engine.add_analyzers()
+        engine.add_analyzer(PnlAnalyzer, name='pnl_analysis')
