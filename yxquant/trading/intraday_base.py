@@ -1,3 +1,6 @@
+"""
+    日内交易类
+"""
 import backtrader as bt
 from datetime import datetime, time as dtime
 from collections import defaultdict
@@ -6,10 +9,11 @@ import time
 import json
 import logging
 import requests
+from .base import BaseStrategy
 logger = logging.getLogger()
 
 
-class Trading(bt.Strategy):
+class IntradayStrategyBase(BaseStrategy):
     TRADES_FORBIDDEN_TIME = [
             '08:30:00',  # 数据公布 如CPI/非农
             '14:00:00',  # 美联储事件
