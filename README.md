@@ -1,4 +1,4 @@
-# yxquant
+# yxquant (文档2024/3/7更新)
 适用Day Trade级别回测 / 实时交易框架, 基于Backtrader, 其中包含了:
 - Day Trade交易
   - 不同时段交易配置
