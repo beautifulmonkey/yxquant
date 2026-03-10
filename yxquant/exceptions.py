@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-yxquant_os 异常定义（开源版）
+异常定义
 
 异常层次：
 - YXQuantError：框架级基类，便于统一捕获
