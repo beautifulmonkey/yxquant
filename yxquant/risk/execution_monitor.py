@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
 from .base import BaseRiskMonitor
-from yxquant_os.exceptions import LicenseError
+from yxquant.exceptions import LicenseError
 
 
 class ExecutionMonitor(BaseRiskMonitor):

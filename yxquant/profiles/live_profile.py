@@ -4,7 +4,7 @@ import backtrader as bt
 from .common import DataFeed, BacktestMode, RunningMode
 from peewee import MySQLDatabase, PostgresqlDatabase, SqliteDatabase
 from yxquant.utils.alerts import DiscordAlert, DingTalkAlert
-from yxquant_os.exceptions import LicenseError
+from yxquant.exceptions import LicenseError
 
 
 @dataclass
