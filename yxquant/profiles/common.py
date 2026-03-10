@@ -1,17 +1,44 @@
-from typing import Any, Dict, List, Optional, Sequence, Union, Type
+import backtrader as bt
+from typing import Any, Dict, Optional, Union, Type, List
+from enum import Enum
 from dataclasses import dataclass, field
+
 
 @dataclass
 class DataFeed:
-    feed: Union[str, Type]    # 类对象或 "pkg.mod:Class" 字符串
-    params: Dict[str, Any]    # 传给 feed 的 kwargs（CSV/PG 等）
+    """单路数据源配置：数据类、参数、名称及是否预加载。"""
+    feed: Union[str, Type]
+    params: Dict[str, Any]
     name: Optional[str] = None
+    need_load: bool = True
 
+@dataclass
+class CommissionInfo:
+    """单品种手续费配置：佣金、乘数、保证金等，对应 Backtrader CommInfo。"""
+    commission: float = 0.0  # 单边佣金
+    mult: float = 1.0
+    name: Optional[str] = None
+    margin: Optional[float] = None
+    commtype: Optional[int] = bt.CommInfoBase.COMM_FIXED
 
 
 @dataclass
 class Broker:
-    commission: float = 0.0
-    cash: Optional[float] = None      # 初始资金（可选）
-    slip_perc: Optional[float] = None # 简单百分比滑点（可选）
+    """回测/优化用经纪商配置：初始资金、滑点、手续费列表、是否 COC。"""
+    cash: Optional[float] = None
+    slip_perc: Optional[float] = None
+    coc: Optional[bool] = False
+    commissions: List[CommissionInfo] = field(default_factory=list)
 
+
+class BacktestMode(Enum):
+    """策略模式"""
+    CTA = "CTA"             # CTA(单品种)
+    ARB = "ARB"             # 套利(配对交易)
+
+
+class RunningMode(Enum):
+    """运行模式"""
+    BACKTEST = "BACKTEST"   # 回测
+    LIVE = "LIVE"           # 实盘
+    OPT = "OPT"             # 参数优化
