@@ -7,7 +7,7 @@ import webbrowser
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 def start_static_server(
-    directory: str,
+    directory: str = "runs",
     port: int = 2918,
     auto_open: bool = True,
     host: str = "localhost"
