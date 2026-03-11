@@ -25,7 +25,7 @@ class CommissionInfo:
 @dataclass
 class Broker:
     """回测/优化用经纪商配置：初始资金、滑点、手续费列表、是否 COC。"""
-    cash: Optional[float] = None
+    cash: Optional[float] = 1000000
     slip_perc: Optional[float] = None
     coc: Optional[bool] = False
     commissions: List[CommissionInfo] = field(default_factory=list)

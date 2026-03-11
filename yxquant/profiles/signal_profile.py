@@ -11,10 +11,10 @@ from yxquant.utils.alerts import DiscordAlert, DingTalkAlert
 class SignalProfile:
     """信号模式配置：只发信号不实盘下单，数据与风控同实盘，结果落库。"""
     mode: BacktestMode
-    stake: float
     data: Sequence[DataFeed]
     db: Union[MySQLDatabase, PostgresqlDatabase, SqliteDatabase]
     broker: Broker
+    stake: float = 1
     alert: Union[DiscordAlert, DingTalkAlert] = None
     risk_monitors: list = field(default_factory=list)
 

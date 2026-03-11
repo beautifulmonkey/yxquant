@@ -11,9 +11,9 @@ from yxquant.risk import RiskEngine, BaseRiskMonitor
 class BacktestProfile:
     """回测配置：数据、资金、手续费、输出路径、分析器与导出器，挂载到引擎后用于纯回测运行。"""
     mode: BacktestMode
-    stake: float
     data: Sequence[DataFeed]
-    output_path: str
+    stake: float = 1
+    output_path: str = "runs"
     broker: Optional[Broker] = None
     enable_cache: bool = True
     risk_monitors: list = field(default_factory=list)

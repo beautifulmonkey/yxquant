@@ -10,9 +10,9 @@ from yxquant.risk import RiskEngine, BaseRiskMonitor
 class OptimizeProfile:
     """参数优化配置：在回测配置基础上用于多组参数批量回测，输出到指定路径。"""
     mode: BacktestMode
-    stake: float
     data: Sequence[DataFeed]
     output_path: str
+    stake: float = 1
     broker: Optional[Broker] = None
     enable_cache: bool = True
     risk_monitors: list = field(default_factory=list)

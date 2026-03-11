@@ -11,10 +11,10 @@ from yxquant.exceptions import LicenseError
 class LiveProfile:
     """实盘配置：数据、券商、数据库、报警与风控，需专业版许可证。"""
     mode: BacktestMode
-    stake: float
     data: Sequence[DataFeed]
     broker: bt.BrokerBase
     db: Union[MySQLDatabase, PostgresqlDatabase, SqliteDatabase]
+    stake: float = 1
     alert: Union[DiscordAlert, DingTalkAlert] = None
     risk_monitors: list = field(default_factory=list)
 
