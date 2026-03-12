@@ -3,7 +3,7 @@
 MBP-N：多档盘口（L2 深度）。
 """
 from dataclasses import dataclass
-from typing import Optional, List, Tuple
+from typing import List, Tuple
 from datetime import datetime
 
 
@@ -16,4 +16,3 @@ class MBPN:
     bids: List[Tuple[float, float]]   # (price, size) per level
     asks: List[Tuple[float, float]]
     ts: datetime
-    symbol: Optional[str] = None
