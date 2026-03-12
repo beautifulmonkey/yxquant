@@ -19,4 +19,4 @@ class LiveProfile:
     risk_monitors: list = field(default_factory=list)
 
     def attach(self, engine):
-        raise LicenseError("该功能需要专业版许可证，请联系获取授权。")
+        raise LicenseError("当前开源版本暂不提供该功能")

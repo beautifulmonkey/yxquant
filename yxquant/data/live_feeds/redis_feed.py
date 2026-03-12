@@ -8,4 +8,4 @@ class RedisPubSubLiveFeed(bt.feed.DataBase):
     """Backtrader live data feed driven by Redis Pub/Sub."""
     lines = ()
     def __init__(self, **kwargs):
-        raise LicenseError("该功能需要专业版许可证，请联系获取授权。")
+        raise LicenseError("当前开源版本暂不提供该功能")

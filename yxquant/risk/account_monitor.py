@@ -18,4 +18,4 @@ class AccountMonitor(BaseRiskMonitor):
         shutdown_on_trigger: bool = False,       # 触发时是否紧急Shutdown
         **kwargs,
     ):
-        raise LicenseError("该功能需要专业版许可证，请联系获取授权。")
+        raise LicenseError("当前开源版本暂不提供该功能")
