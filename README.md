@@ -155,6 +155,11 @@ engine.run()
 ![Alt text](./img/img.png)
 ![Alt text](./img/img_1.png)
 
+系统同时集成了 `QuantStats` 报告，可用于查看更完整的策略表现分析：
+
+![Alt text](./img/img_5.jpg)
+
+
 ### 参数优化
 
 对应 `examples/opt_params.py`：
