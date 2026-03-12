@@ -1,7 +1,7 @@
 from yxquant.data import CSVData
 from yxquant.utils import start_static_server
 from yxquant.engine import OPTEngine
-from yxquant.profiles import DataFeed, BacktestMode, OptimizeProfile, Broker
+from yxquant.profiles import DataFeed, BacktestMode, OptimizeProfile, Broker, OHLCV
 from yxquant.trading import CTAStrategyBase
 import backtrader as bt
 
@@ -27,7 +27,7 @@ class EMA9Strategy(CTAStrategyBase):
 if __name__ == '__main__':
     BACKTEST_CTA_PROFILE = OptimizeProfile(
         mode=BacktestMode.CTA,
-        data=[DataFeed(name="ES", feed=CSVData, params=dict(path=".\ES_5min.csv"))],
+        data=[DataFeed(name="ES", feed=CSVData, params=dict(path=".\ES_5min.csv"), schema=OHLCV)],
         broker=Broker(cash=10000)
     )
     engine = OPTEngine({}, batch_size=512, max_cpus=None)

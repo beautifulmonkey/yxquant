@@ -1,7 +1,7 @@
 from yxquant.data import CSVData
 from yxquant.utils import start_static_server
 from yxquant.engine import CoreEngine
-from yxquant.profiles import DataFeed, BacktestMode, BacktestProfile, Broker
+from yxquant.profiles import DataFeed, BacktestMode, BacktestProfile, Broker, OHLCV
 from yxquant.trading import CTAStrategyBase
 import backtrader as bt
 
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     # 定义一个最小可运行的 CTA 回测配置：模式、数据源和初始资金。
     BACKTEST_CTA_PROFILE = BacktestProfile(
         mode=BacktestMode.CTA,
-        data=[DataFeed(name="ES", feed=CSVData, params=dict(path=".\ES_5min.csv"))],
+        data=[DataFeed(name="ES", feed=CSVData, params=dict(path=".\ES_5min.csv"), schema=OHLCV)],
         broker=Broker(cash=10000)
     )
     engine = CoreEngine({})
