@@ -180,6 +180,10 @@ engine.run()
 
 ![Alt text](./img/img_4.png)
 
+支持柱状图、3D参数结果可视化，查看各个关键统计指标
+![Alt text](./img/img_6.jpg)
+
+
 
 ## 联系方式
 
