@@ -1,39 +1,44 @@
-import pandas as pd
+from yxquant.data import CSVData
+from yxquant.utils import start_static_server
+from yxquant.engine import CoreEngine
+from yxquant.profiles import DataFeed, BacktestMode, BacktestProfile, Broker
+from yxquant.trading import CTAStrategyBase
 import backtrader as bt
 
-from yxquant.trading import Trading
-from yxquant.cerebro import Cerebro
-
-
-class EMA9Strategy(Trading):
+class EMA9Strategy(CTAStrategyBase):
     name = 'EMA9'
     params = dict(
-        RTH_stop=10,
-        RTH_target=20,
-        forbidden_hour=[*Trading.ETH1, *Trading.ETH2],
+        period=9,  # EMA 计算周期
+        tp=10,  # 止盈点数
+        sl=7  # 止损点数
     )
 
     def __init__(self):
         super().__init__()
-        self.ema9 = bt.indicators.EMA(self.datas[0], period=9)
+        self.ema9 = bt.indicators.EMA(self.datas[0], period=self.p.period)
 
-    @Trading.position_management
-    def next(self):
-        if self.data.high[0] > self.ema9[0] and self.data.high[-1] <= self.ema9[-1]:
-            self.trade_by_signal(-1)  # 做空
-        elif self.data.low[0] < self.ema9[0] and self.data.low[-1] >= self.ema9[-1]:
-            self.trade_by_signal(1)  # 做多
+    def on_data(self):
+        o, h, l, c = self.data.open[0], self.data.high[0], self.data.low[0], self.data.close[0]
+
+        if self.ema9[0] > l >= self.ema9[-1]:
+            self.long(tp_price=c + self.p.tp, sl_price=c - self.p.sl)
 
 
 if __name__ == '__main__':
+    # 定义一个最小可运行的 CTA 回测配置：模式、数据源和初始资金。
+    BACKTEST_CTA_PROFILE = BacktestProfile(
+        mode=BacktestMode.CTA,
+        data=[DataFeed(name="ES", feed=CSVData, params=dict(path=".\ES_5min.csv"))],
+        broker=Broker(cash=10000)
+    )
+    engine = CoreEngine({})
+    # 注册策略，并导出 ema9 指标到可视化结果中。
+    engine.add_strategy(EMA9Strategy, exported_indicators=['ema9'])
+    engine.attach(BACKTEST_CTA_PROFILE)
+    results, ctx = engine.run()
 
-    df = pd.read_csv("ES_5min.csv", parse_dates=[0], index_col=0)
+    # 读取回测结束后的账户净值，并启动静态页面查看结果。
+    final_value = engine.cerebro.broker.getvalue()
+    print(f"Final portfolio value: 💰💰💰{final_value:.2f}")
+    start_static_server()
 
-    cerebro = Cerebro()
-
-    cerebro.adddata(df)
-    cerebro.addstrategy(EMA9Strategy)
-    cerebro.broker.setcash(100000.0)
-    cerebro.run()
-    cerebro.plot()
-    print(f"最终资金: {cerebro.broker.getvalue()}")

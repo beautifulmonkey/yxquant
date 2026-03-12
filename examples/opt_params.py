@@ -1,43 +1,43 @@
-import pandas as pd
+from yxquant.data import CSVData
+from yxquant.utils import start_static_server
+from yxquant.engine import OPTEngine
+from yxquant.profiles import DataFeed, BacktestMode, OptimizeProfile, Broker
+from yxquant.trading import CTAStrategyBase
 import backtrader as bt
 
-from yxquant.trading import Trading
-from yxquant.cerebro import Cerebro
-
-
-class EMA9Strategy(Trading):
+class EMA9Strategy(CTAStrategyBase):
     name = 'EMA9'
     params = dict(
-        RTH_stop=10,
-        RTH_target=20,
-        forbidden_hour=[*Trading.ETH1, *Trading.ETH2],
+        period=9,  # EMA 计算周期
+        tp=10,  # 止盈点数
+        sl=7  # 止损点数
     )
 
     def __init__(self):
         super().__init__()
-        self.ema9 = bt.indicators.EMA(self.datas[0], period=9)
+        self.ema9 = bt.indicators.EMA(self.datas[0], period=self.p.period)
 
-    @Trading.position_management
-    def next(self):
-        if self.data.high[0] > self.ema9[0] and self.data.high[-1] <= self.ema9[-1]:
-            self.trade_by_signal(-1)  # 做空
-        elif self.data.low[0] < self.ema9[0] and self.data.low[-1] >= self.ema9[-1]:
-            self.trade_by_signal(1)  # 做多
+    def on_data(self):
+        o, h, l, c = self.data.open[0], self.data.high[0], self.data.low[0], self.data.close[0]
+
+        if self.ema9[0] > l >= self.ema9[-1]:
+            self.long(tp_price=c + self.p.tp, sl_price=c - self.p.sl)
 
 
 if __name__ == '__main__':
-
-    df = pd.read_csv("ES_5min.csv", parse_dates=[0], index_col=0)
-
-    cerebro = Cerebro()
-
-    cerebro.adddata(df)
-    cerebro.optparams(EMA9Strategy, dict(
-        RTH_stop=range(5, 10)
+    BACKTEST_CTA_PROFILE = OptimizeProfile(
+        mode=BacktestMode.CTA,
+        data=[DataFeed(name="ES", feed=CSVData, params=dict(path=".\ES_5min.csv"))],
+        broker=Broker(cash=10000)
+    )
+    engine = OPTEngine({}, batch_size=512, max_cpus=None)
+    # 对止盈和止损参数做网格搜索，批量评估不同参数组合的表现。
+    engine.opt_strategy(EMA9Strategy, **dict(
+        tp=range(5, 20),
+        sl=range(5, 20),
     ))
-    cerebro.addstrategy(EMA9Strategy)
+    engine.attach(BACKTEST_CTA_PROFILE)
+    engine.run()
+    # 启动静态页面，用于查看参数优化结果。
+    start_static_server()
 
-    cerebro.broker.setcash(100000.0)
-    cerebro.run()
-    cerebro.plot()
-    print(f"最终资金: {cerebro.broker.getvalue()}")
