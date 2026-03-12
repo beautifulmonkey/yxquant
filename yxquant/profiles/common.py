@@ -2,15 +2,17 @@ import backtrader as bt
 from typing import Any, Dict, Optional, Union, Type, List
 from enum import Enum
 from dataclasses import dataclass, field
-
+from yxquant.schemas import OHLCV
 
 @dataclass
 class DataFeed:
-    """单路数据源配置：数据类、参数、名称及是否预加载。"""
+    """单路数据源配置：数据类、参数、名称、是否预加载及数据 schema。"""
     feed: Union[str, Type]
     params: Dict[str, Any]
     name: Optional[str] = None
     need_load: bool = True
+    schema: Type = OHLCV  # 数据格式：OHLCV | MBP1 | MBPN | Trade | TBBO. （ 回测模式目前仅支持 OHLCV）
+
 
 @dataclass
 class CommissionInfo:
