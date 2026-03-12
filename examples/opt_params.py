@@ -27,7 +27,7 @@ class EMA9Strategy(CTAStrategyBase):
 if __name__ == '__main__':
     BACKTEST_CTA_PROFILE = OptimizeProfile(
         mode=BacktestMode.CTA,
-        data=[DataFeed(name="ES", feed=CSVData, params=dict(path=".\ES_5min.csv"), schema=OHLCV)],
+        data=[DataFeed(name="ES", feed=CSVData, params=dict(path="ES_5min.csv"), schema=OHLCV)],
         broker=Broker(cash=10000)
     )
     engine = OPTEngine({}, batch_size=512, max_cpus=None)
